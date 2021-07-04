@@ -51,6 +51,12 @@ export class TransactionService {
     }, null);
   }
 
+  filterChildren(children: TransactionDto[], confidenceLevel: number) {
+    return children.map((item) => {
+      return this.filterParentByConfidenceLevel(item, confidenceLevel);
+    }, null);
+  }
+
   filterParentByConfidenceLevel(
     transaction: TransactionDto,
     confidenceLevel: number,
@@ -62,6 +68,7 @@ export class TransactionService {
       return null;
     }
     transaction.connectionInfo ? delete transaction.connectionInfo : null;
+
     return transaction;
   }
   getJsonData() {
