@@ -37,7 +37,7 @@ export class TransactionService {
     confidenceLevel: number,
     data: TransactionDto[],
   ): TransactionDto {
-    return data.reduce((accumulator, transaction) => {
+    return data.reduce((accumulator, transaction, index, array) => {
       if (accumulator) return accumulator;
       if (transaction.id === id) {
         // check for confidence level

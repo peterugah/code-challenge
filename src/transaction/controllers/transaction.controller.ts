@@ -24,8 +24,9 @@ export class TransactionController {
     if (!foundTransaction) {
       throw new NotFoundException('transaction not found');
     }
+    return foundTransaction;
     // flatten data
-    return this.transactionService.flatternResult(foundTransaction);
+    // return this.transactionService.flatternResult(foundTransaction);
 
     // compute combined confidence levels
 
