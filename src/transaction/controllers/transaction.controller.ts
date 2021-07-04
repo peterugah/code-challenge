@@ -14,8 +14,10 @@ export class TransactionController {
   ) {
     const { transactionId, confidenceLevel } = query;
 
+    // get data
     const data = this.transactionService.getJsonData();
 
+    // filter data
     const foundTransaction = this.transactionService.getTransaction(
       transactionId,
       confidenceLevel,
@@ -24,11 +26,11 @@ export class TransactionController {
     if (!foundTransaction) {
       throw new NotFoundException('transaction not found');
     }
-    return foundTransaction;
-    // flatten data
-    // return this.transactionService.flatternResult(foundTransaction);
+    // filter out children with lower confidence levels
 
-    // compute combined confidence levels
+    // calculate combined connection  info
+
+    // flatten data
 
     return foundTransaction;
     return data;

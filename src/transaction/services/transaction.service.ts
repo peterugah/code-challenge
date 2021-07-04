@@ -32,25 +32,18 @@ export class TransactionService {
     }
   }
 
+  // TODO: filter children and return only transactions with same or higher confidence levels
   getTransaction(
     id: string,
     confidenceLevel: number,
     data: TransactionDto[],
   ): TransactionDto {
-    return data.reduce((accumulator, transaction, index, array) => {
-      if (accumulator) return accumulator;
+    return data.reduce((accumulator, transaction) => {
+      if (accumulator) {
+        return accumulator;
+      }
       if (transaction.id === id) {
-        // check for confidence level
-        if (
-          transaction.connectionInfo &&
-          transaction.connectionInfo.confidence > confidenceLevel
-        ) {
-          return null;
-        }
-        // check if connectionInfo exists
-        transaction.connectionInfo ? delete transaction.connectionInfo : null;
-        // meets criteria
-        return transaction;
+        return this.filterParentByConfidenceLevel(transaction, confidenceLevel);
       }
       if (transaction.children) {
         return this.getTransaction(id, confidenceLevel, transaction.children);
@@ -58,6 +51,19 @@ export class TransactionService {
     }, null);
   }
 
+  filterParentByConfidenceLevel(
+    transaction: TransactionDto,
+    confidenceLevel: number,
+  ) {
+    if (
+      transaction.connectionInfo &&
+      transaction.connectionInfo.confidence > confidenceLevel
+    ) {
+      return null;
+    }
+    transaction.connectionInfo ? delete transaction.connectionInfo : null;
+    return transaction;
+  }
   getJsonData() {
     const transactionDir = __dirname.split('/');
     transactionDir.length = transactionDir.length - 1;

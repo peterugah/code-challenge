@@ -1,0 +1,94 @@
+{
+  "id": "5c868b228f8d108091fc0053",
+  "age": 24,
+  "name": "Manuela Meyer",
+  "email": "manuelameyer@equicom.com",
+  "phone": "(902) 588-2074",
+  "connectionInfo": {
+    "type": "sameEmail",
+    "confidence": 1
+  },
+  "geoInfo": {
+    "latitude": 48.943732,
+    "longitude": -94.05825
+  },
+  "children": [
+    {
+      "id": "5c868b223c158bf1f7a6a9df",
+      "age": 32,
+      "name": "Harvey Goodman",
+      "email": "harveygoodman@equicom.com",
+      "phone": "(848) 540-3876",
+      "connectionInfo": {
+        "type": "sameEmail",
+        "confidence": 1
+      },
+      "geoInfo": {
+        "latitude": 68.134818,
+        "longitude": 72.825049
+      },
+      "children": [
+        {
+          "id": "5c868b223b2a9d287fa7f275",
+          "age": 27,
+          "name": "Whitney Dillard",
+          "email": "whitneydillard@equicom.com",
+          "phone": "(872) 463-3524",
+          "connectionInfo": {
+            "type": "sameEmail",
+            "confidence": 1
+          },
+          "geoInfo": {
+            "latitude": -57.068896,
+            "longitude": 79.10501
+          }
+        },
+        {
+          "id": "5c868b22dd5d1d8e48408505",
+          "age": 28,
+          "name": "Coleman Ruiz",
+          "email": "colemanruiz@equicom.com",
+          "phone": "(902) 470-3136",
+          "connectionInfo": {
+            "type": "sameEmail",
+            "confidence": 1
+          },
+          "geoInfo": {
+            "latitude": -82.831814,
+            "longitude": 32.270796
+          }
+        },
+        {
+          "id": "5c868b2227406edde5ddbb20",
+          "age": 30,
+          "name": "Bonnie Morales",
+          "email": "bonniemorales@equicom.com",
+          "phone": "(878) 430-3543",
+          "connectionInfo": {
+            "type": "sameEmail",
+            "confidence": 1
+          },
+          "geoInfo": {
+            "latitude": -14.526812,
+            "longitude": -47.804693
+          }
+        },
+        {
+          "id": "5c868b22fe03e978a52c029f",
+          "age": 28,
+          "name": "Agnes Cruz",
+          "email": "agnescruz@equicom.com",
+          "phone": "(821) 459-2188",
+          "connectionInfo": {
+            "type": "sameEmail",
+            "confidence": 1
+          },
+          "geoInfo": {
+            "latitude": -41.111504,
+            "longitude": -166.991531
+          }
+        }
+      ]
+    }
+  ]
+}

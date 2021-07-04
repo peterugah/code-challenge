@@ -1,0 +1,51 @@
+{
+  "id": "5c868b2213b36f773efcee81",
+  "age": 40,
+  "name": "Love Hoffman",
+  "email": "lavernevaldez@equicom.com",
+  "phone": "(856) 488-3734",
+  "connectionInfo": { "type": "sameEmail", "confidence": 1 },
+  "geoInfo": { "latitude": 5.393689, "longitude": 91.586263 },
+  "children": [
+    {
+      "id": "5c868b224aafffc5fcffd9c3",
+      "age": 20,
+      "name": "Love Hoffman",
+      "email": "shaunamckee@equicom.com",
+      "phone": "(888) 562-3854",
+      "connectionInfo": { "type": "sameName", "confidence": 0.8 },
+      "geoInfo": { "latitude": -86.013184, "longitude": -95.186326 },
+      "children": [
+        {
+          "id": "5c868b22d84354bef2474acb",
+          "age": 23,
+          "name": "Wolfe Dotson",
+          "email": "shaunamckee@equicom.com",
+          "phone": "(989) 525-2851",
+          "connectionInfo": { "type": "sameEmail", "confidence": 1 },
+          "geoInfo": { "latitude": 42.04286, "longitude": 124.724138 }
+        },
+        {
+          "id": "5c868b22ad377c7f0df5d5e4",
+          "age": 27,
+          "name": "Robertson Whitfield",
+          "email": "robertsonwhitfield@equicom.com",
+          "phone": "(888) 562-3854",
+          "connectionInfo": { "type": "samePhoneNumber", "confidence": 1 },
+          "geoInfo": { "latitude": -69.686914, "longitude": -79.128395 }
+        },
+        {
+          "id": "5c868b22674806abad3a8f9c",
+          "age": 30,
+          "name": "Melanie Colon",
+          "email": "melaniecolon@equicom.com",
+          "phone": "(897) 501-2652",
+          "connectionInfo": { "type": "sameDeviceToken", "confidence": 0.4 },
+          "geoInfo": { "latitude": 14.713102, "longitude": -34.703767 }
+        }
+      ]
+    }
+  ]
+  {"id":"5c868b227d1acdd8c333dd44","age":34,"name":"Raquel Peters","email":"raquelpeters@equicom.com","phone":"(817) 598-2777","connectionInfo":{"type":"sameEmail","confidence":1},"geoInfo":{"latitude":14.938381,"longitude":-123.729536},"children":[]}
+}
+
