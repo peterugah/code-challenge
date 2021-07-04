@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
-import { TransactionDto } from './transaction.dto';
+import { TransactionDto } from '../dtos/transaction.dto';
 @Injectable()
 export class TransactionService {
   private readonly dataPath: string = 'data/test-data_072020.json';
@@ -8,31 +8,19 @@ export class TransactionService {
   getMatchingData(query: TransactionDto) {
     const data = this.getJsonData();
     const { transactionId, confidenceLevel } = query;
-    // loop through the array to get the record with the id
+    // loop through the array to get the record with that meet required conditions
     const result = this.getTransaction(transactionId, confidenceLevel, data);
     if (!result) {
       throw new NotFoundException('transaction not found');
     }
     return result;
-    // get all its children with the confidence level greater than or equal to that provided
-
-    // perform data transformation
+    // compute combined confidence levels
 
     // flatten data
     return data;
   }
 
-  // private getTransaction(id: string, data: object[]) {
-  //   for (let transaction of data) {
-  //     console.log(transaction['id']);
-  //     if (transaction['id'] === id) return transaction;
-  //     if (transaction['children']) {
-  //       return this.getTransaction(id, transaction['children']);
-  //     }
-  //   }
-  // }
-
-  private getTransaction(id: string, confidenceLevel: number, data: object[]) {
+  getTransaction(id: string, confidenceLevel: number, data: object[]) {
     return data.reduce((accumulator, transaction) => {
       console.log('accumulator is ', accumulator);
       if (accumulator) return accumulator;
@@ -54,10 +42,10 @@ export class TransactionService {
     }, null);
   }
 
-  private getJsonData() {
-    const transctionDir = __dirname.split('/');
-    transctionDir.length = transctionDir.length - 1;
-    const fullPath = `${transctionDir.join('/')}/${this.dataPath}`;
+  getJsonData() {
+    const transactionDir = __dirname.split('/');
+    transactionDir.length = transactionDir.length - 1;
+    const fullPath = `${transactionDir.join('/')}/${this.dataPath}`;
     if (!fs.existsSync(fullPath)) {
       throw new NotFoundException('unabled to locate json data');
     }
