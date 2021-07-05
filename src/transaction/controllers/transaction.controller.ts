@@ -1,7 +1,7 @@
 import { Get, NotFoundException, Query } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { JoiObjectPipe } from 'src/common/pipes/joi.pipe';
-import { TransactionQueryDto } from '../dtos/transaction.dto';
+import { TransactionDto, TransactionQueryDto } from '../dtos/transaction.dto';
 import { TransactionService } from '../services/transaction.service';
 import { transactionsValidator } from '../validators/transaction.validator';
 @Controller('transactions')
@@ -18,22 +18,19 @@ export class TransactionController {
     const data = this.transactionService.getJsonData();
 
     // filter data
-    const foundTransaction = this.transactionService.getTransaction(
+    const foundTransaction = this.transactionService.getTransactions(
       transactionId,
       confidenceLevel,
       data,
     );
     if (!foundTransaction) {
-      throw new NotFoundException('transaction not found');
+      throw new NotFoundException('no matching transaction found');
     }
-    // filter out children with lower confidence levels
-
-    // calculate combined connection  info
-
     // flatten data
 
+    return this.transactionService.flatternResult(foundTransaction);
+
     return foundTransaction;
-    return data;
   }
 
   @Get('data')

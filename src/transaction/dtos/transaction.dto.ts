@@ -11,7 +11,8 @@ export class TransactionDto {
   phone: string;
   geoInfo: GeoInfoDto;
   connectionInfo?: ConnectionInfoDto;
-  children: TransactionDto[];
+  CombinedConnectionInfoDto?: CombinedConnectionInfoDto;
+  children?: TransactionDto[];
 }
 
 class GeoInfoDto {
@@ -21,5 +22,10 @@ class GeoInfoDto {
 
 class ConnectionInfoDto {
   type: string;
+  confidence: number;
+}
+
+export class CombinedConnectionInfoDto {
+  type: string[];
   confidence: number;
 }

@@ -1,39 +1,83 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import * as fs from 'fs';
-import { TransactionDto, TransactionQueryDto } from '../dtos/transaction.dto';
+import {
+  CombinedConnectionInfoDto,
+  TransactionDto,
+  TransactionQueryDto,
+} from '../dtos/transaction.dto';
 @Injectable()
 export class TransactionService {
   private readonly dataPath: string = 'data/test-data_072020.json';
 
-  getMatchingData(query: TransactionQueryDto) {
-    const data = this.getJsonData();
-    const { transactionId, confidenceLevel } = query;
-    // loop through the array to get the record with that meet required conditions
-    const result = this.getTransaction(transactionId, confidenceLevel, data);
-    if (!result) {
-      throw new NotFoundException('no transaction found');
-    }
-    return result;
-    // compute combined confidence levels
-
-    // flatten data
+  flatternResult(data: TransactionDto) {
     return data;
   }
 
-  // TODO: next steps
-  flatternResult(data: TransactionDto) {
-    if (data.children) {
-      return data.children.reduce((accumulator, transaction) => {
+  filterChildrenByConfidenceLevel(
+    children: TransactionDto[],
+    confidenceLevel: number,
+    parent: CombinedConnectionInfoDto,
+  ) {
+    if (!children) return [];
+    //
+    children.map((child, index, array) => {
+      if (
+        child.connectionInfo &&
+        child.connectionInfo.confidence >= confidenceLevel
+      ) {
+        // set combined confidence levels
+        if (parent) {
+          child.CombinedConnectionInfoDto = {
+            type: parent.type,
+            confidence: parent.confidence,
+          };
+        }
+
+        // only add child type and confidence if the type does not exists in parent
+        this.computeCombinedConnectionInfo(parent, child);
+
         return {
-          ...accumulator,
-          ...transaction,
+          ...child,
+          children: child.children
+            ? this.filterChildrenByConfidenceLevel(
+                child.children,
+                confidenceLevel,
+                parent,
+              )
+            : [],
         };
-      }, []);
-    }
+      }
+      // remove the item not needed
+      array.splice(index);
+    });
+    return children;
   }
 
-  // TODO: filter children and return only transactions with same or higher confidence levels
-  getTransaction(
+  computeCombinedConnectionInfo(
+    parent: CombinedConnectionInfoDto,
+    transaction: TransactionDto,
+  ) {
+    let result: CombinedConnectionInfoDto;
+    if (
+      transaction.connectionInfo &&
+      parent &&
+      !parent.type.includes(transaction.connectionInfo.type)
+    ) {
+      transaction.CombinedConnectionInfoDto.type = [
+        ...transaction.CombinedConnectionInfoDto.type,
+        transaction.connectionInfo.type,
+      ];
+      transaction.CombinedConnectionInfoDto.confidence *=
+        transaction.connectionInfo.confidence;
+    } else {
+      // use only the transaction type and confidence
+      transaction.CombinedConnectionInfoDto = {
+        type: [transaction.connectionInfo.type],
+        confidence: transaction.connectionInfo.confidence,
+      };
+    }
+  }
+  getTransactions(
     id: string,
     confidenceLevel: number,
     data: TransactionDto[],
@@ -46,14 +90,8 @@ export class TransactionService {
         return this.filterParentByConfidenceLevel(transaction, confidenceLevel);
       }
       if (transaction.children) {
-        return this.getTransaction(id, confidenceLevel, transaction.children);
+        return this.getTransactions(id, confidenceLevel, transaction.children);
       }
-    }, null);
-  }
-
-  filterChildren(children: TransactionDto[], confidenceLevel: number) {
-    return children.map((item) => {
-      return this.filterParentByConfidenceLevel(item, confidenceLevel);
     }, null);
   }
 
@@ -63,11 +101,29 @@ export class TransactionService {
   ) {
     if (
       transaction.connectionInfo &&
-      transaction.connectionInfo.confidence > confidenceLevel
+      transaction.connectionInfo.confidence < confidenceLevel
     ) {
       return null;
     }
+
+    // set combined confidence level
+    if (transaction.connectionInfo) {
+      transaction.CombinedConnectionInfoDto = {
+        type: [transaction.connectionInfo.type],
+        confidence: transaction.connectionInfo.confidence,
+      };
+    }
+    // delete connection info of found transaction
     transaction.connectionInfo ? delete transaction.connectionInfo : null;
+
+    // filter children
+    transaction.children = transaction.children
+      ? this.filterChildrenByConfidenceLevel(
+          transaction.children,
+          confidenceLevel,
+          transaction.CombinedConnectionInfoDto,
+        )
+      : [];
 
     return transaction;
   }
