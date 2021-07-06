@@ -30,7 +30,7 @@ export class TransactionController {
     const flattenedResult = this.transactionService.flattenChildren(
       foundTransaction.children,
     );
-    // remove unneeded properties in the first record
+    // remove unneeded properties in the found record
     delete foundTransaction.children;
     delete foundTransaction.connectionInfo;
 
@@ -39,29 +39,4 @@ export class TransactionController {
 
     return flattenedResult;
   }
-  // @Get('not-flattened')
-  // data2(
-  //   @Query(new JoiObjectPipe(transactionsValidator)) query: TransactionQueryDto,
-  // ) {
-  //   const { transactionId, confidenceLevel } = query;
-
-  //   // get data
-  //   const data = this.transactionService.getJsonData();
-
-  //   // filter data
-  //   const foundTransaction = this.transactionService.getTransaction(
-  //     transactionId,
-  //     confidenceLevel,
-  //     data,
-  //   );
-  //   if (!foundTransaction) {
-  //     throw new NotFoundException('no matching transaction found');
-  //   }
-  //   return foundTransaction;
-  // }
-
-  // @Get('data')
-  // data() {
-  //   return this.transactionService.getJsonData();
-  // }
 }

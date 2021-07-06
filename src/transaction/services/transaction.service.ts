@@ -63,7 +63,10 @@ export class TransactionService {
     transaction.CombinedConnectionInfo = {
       // add unique types
       type: [...new Set([...parent.type, transaction.connectionInfo.type])],
-      confidence: transaction.connectionInfo.confidence * parent.confidence,
+      // reduce to two decimal places
+      confidence: +(
+        transaction.connectionInfo.confidence * parent.confidence
+      ).toFixed(2),
     };
   }
 
