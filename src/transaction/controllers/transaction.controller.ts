@@ -60,8 +60,8 @@ export class TransactionController {
   //   return foundTransaction;
   // }
 
-  @Get('data')
-  data() {
-    return this.transactionService.getJsonData();
-  }
+  // @Get('data')
+  // data() {
+  //   return this.transactionService.getJsonData();
+  // }
 }

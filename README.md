@@ -35,7 +35,8 @@ To change it, create an .env file on the root directory and set the port to a po
 ```bash
 # production
 GET http://localhost:3000/api/transactions?transactionId=5c868b22eb7069b50c6d2d32&confidenceLevel=1
-  # development
+
+# development
 GET http://localhost:3000/api/transactions?transactionId=5c868b22eb7069b50c6d2d32&confidenceLevel=1
 ```
 
