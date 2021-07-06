@@ -9,8 +9,22 @@ import {
 export class TransactionService {
   private readonly dataPath: string = 'data/test-data_072020.json';
 
-  flatternResult(data: TransactionDto) {
-    return data;
+  flattenChildren(children: TransactionDto[]) {
+    const flatternedArray: TransactionDto[] = [];
+    this.iterator(children, flatternedArray);
+    return flatternedArray;
+  }
+
+  iterator(array: TransactionDto[], result: TransactionDto[]) {
+    array.map((item) => {
+      const clone = Object.assign({}, item);
+      // delete the child
+      if (clone.children) delete clone.children;
+
+      result.push(clone);
+      // iterate over children
+      if (item.children) this.iterator(item.children, result);
+    });
   }
 
   filterChildrenByConfidenceLevel(
@@ -18,22 +32,11 @@ export class TransactionService {
     confidenceLevel: number,
     parent: CombinedConnectionInfoDto,
   ) {
-    if (!children) return [];
-    //
     children.map((child, index, array) => {
       if (
         child.connectionInfo &&
         child.connectionInfo.confidence >= confidenceLevel
       ) {
-        // set combined confidence levels
-        if (parent) {
-          child.CombinedConnectionInfoDto = {
-            type: parent.type,
-            confidence: parent.confidence,
-          };
-        }
-
-        // only add child type and confidence if the type does not exists in parent
         this.computeCombinedConnectionInfo(parent, child);
 
         return {
@@ -42,12 +45,12 @@ export class TransactionService {
             ? this.filterChildrenByConfidenceLevel(
                 child.children,
                 confidenceLevel,
-                parent,
+                child.CombinedConnectionInfo,
               )
             : [],
         };
       }
-      // remove the item not needed
+      // ignore other records
       array.splice(index);
     });
     return children;
@@ -57,27 +60,14 @@ export class TransactionService {
     parent: CombinedConnectionInfoDto,
     transaction: TransactionDto,
   ) {
-    let result: CombinedConnectionInfoDto;
-    if (
-      transaction.connectionInfo &&
-      parent &&
-      !parent.type.includes(transaction.connectionInfo.type)
-    ) {
-      transaction.CombinedConnectionInfoDto.type = [
-        ...transaction.CombinedConnectionInfoDto.type,
-        transaction.connectionInfo.type,
-      ];
-      transaction.CombinedConnectionInfoDto.confidence *=
-        transaction.connectionInfo.confidence;
-    } else {
-      // use only the transaction type and confidence
-      transaction.CombinedConnectionInfoDto = {
-        type: [transaction.connectionInfo.type],
-        confidence: transaction.connectionInfo.confidence,
-      };
-    }
+    transaction.CombinedConnectionInfo = {
+      // add unique types
+      type: [...new Set([...parent.type, transaction.connectionInfo.type])],
+      confidence: transaction.connectionInfo.confidence * parent.confidence,
+    };
   }
-  getTransactions(
+
+  getTransaction(
     id: string,
     confidenceLevel: number,
     data: TransactionDto[],
@@ -90,7 +80,7 @@ export class TransactionService {
         return this.filterParentByConfidenceLevel(transaction, confidenceLevel);
       }
       if (transaction.children) {
-        return this.getTransactions(id, confidenceLevel, transaction.children);
+        return this.getTransaction(id, confidenceLevel, transaction.children);
       }
     }, null);
   }
@@ -108,20 +98,24 @@ export class TransactionService {
 
     // set combined confidence level
     if (transaction.connectionInfo) {
-      transaction.CombinedConnectionInfoDto = {
+      transaction.CombinedConnectionInfo = {
         type: [transaction.connectionInfo.type],
         confidence: transaction.connectionInfo.confidence,
       };
+    } else {
+      // set the default for the parent
+      transaction.CombinedConnectionInfo = {
+        type: [],
+        confidence: 1,
+      };
     }
-    // delete connection info of found transaction
-    transaction.connectionInfo ? delete transaction.connectionInfo : null;
 
     // filter children
     transaction.children = transaction.children
       ? this.filterChildrenByConfidenceLevel(
           transaction.children,
           confidenceLevel,
-          transaction.CombinedConnectionInfoDto,
+          transaction.CombinedConnectionInfo,
         )
       : [];
 
